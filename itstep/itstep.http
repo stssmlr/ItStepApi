@@ -1,0 +1,6 @@
+@itstep_HostAddress = http://localhost:5124
+
+GET {{itstep_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
