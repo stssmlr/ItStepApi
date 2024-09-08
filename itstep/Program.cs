@@ -1,3 +1,6 @@
+using Core.Interfaces;
+using Core.MapperProfiles;
+using Core.Services;
 using Data.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +18,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ITStepDbContext>(options =>
     options.UseSqlServer(connectionString)
 );
+
+builder.Services.AddScoped<IEducationService, EducationService>();
+
+builder.Services.AddAutoMapper(typeof(AppProfile));
 
 var app = builder.Build();
 

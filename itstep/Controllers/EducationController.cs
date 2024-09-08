@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Data.Entities;
 using Data.Data;
+using AutoMapper;
+using Core.Dtos;
+using Core.Interfaces;
 
 namespace itstep.Controllers
 {
@@ -8,60 +11,61 @@ namespace itstep.Controllers
     [ApiController]
     public class EducationController : ControllerBase
     {
-        private readonly ITStepDbContext ctx;
+        private readonly IEducationService educationService;
 
-        public EducationController(ITStepDbContext ctx)
+        public EducationController(IEducationService educationService)
         {
-            this.ctx = ctx;
+            this.educationService = educationService;
         }
 
         // [C]reate [R]ead [U]pdate [D]elete
 
         [HttpGet("all")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(ctx.Educations.ToList());
+            return Ok(await educationService.GetAll());
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var product = ctx.Educations.Find(id);
-            if (product == null) return NotFound();
-
-            return Ok(product);
+            return Ok(await educationService.Get(id));
         }
 
         [HttpPost]
-        public IActionResult Create(Education model)
+        public async Task<IActionResult> Create(CreateEducationDto model)
         {
-            if (!ModelState.IsValid) return BadRequest();
-
-            ctx.Educations.Add(model);
-            ctx.SaveChanges();
+            await educationService.Create(model);
 
             return Ok();
         }
 
         [HttpPut]
-        public IActionResult Edit(Education model)
+        public async Task<IActionResult> Edit(EditEducationDto model)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            await educationService.Edit(model);
 
-            ctx.Educations.Update(model);
-            ctx.SaveChanges();
+            return Ok();
+        }
+        [HttpPatch("archive")]
+        public async Task<IActionResult> Archive(int id)
+        {
+            await educationService.Archive(id);
 
             return Ok();
         }
 
-        [HttpDelete]
-        public IActionResult Delete(int id)
+        [HttpPatch("restore")]
+        public async Task<IActionResult> Restore(int id)
         {
-            var product = ctx.Educations.Find(id);
-            if (product == null) return NotFound();
+            await educationService.Restore(id);
 
-            ctx.Educations.Remove(product);
-            ctx.SaveChanges();
+            return Ok();
+        }
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await educationService.Delete(id);
 
             return Ok();
         }
