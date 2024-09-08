@@ -3,6 +3,7 @@ using Core.Dtos;
 using Core.Interfaces;
 using Data.Data;
 using Data.Entities;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,11 +17,13 @@ namespace Core.Services
     {
         private readonly ITStepDbContext ctx;
         private readonly IMapper mapper;
+        private readonly IValidator<CreateEducationDto> validator;
 
-        public EducationService(ITStepDbContext ctx, IMapper mapper)
+        public EducationService(ITStepDbContext ctx, IMapper mapper, IValidator<CreateEducationDto> validator)
         {
             this.ctx = ctx;
             this.mapper = mapper;
+            this.validator = validator;
         }
 
         public async Task Archive(int id)
