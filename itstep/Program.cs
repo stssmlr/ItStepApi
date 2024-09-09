@@ -2,6 +2,8 @@ using Core.Interfaces;
 using Core.MapperProfiles;
 using Core.Services;
 using Data.Data;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
