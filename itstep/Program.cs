@@ -4,6 +4,7 @@ using Core.Services;
 using Data.Data;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using itstep.Middlewares;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<CustomMiddleware>();
 
 app.UseHttpsRedirection();
 

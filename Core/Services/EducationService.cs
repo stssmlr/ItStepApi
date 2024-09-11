@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Dtos;
+using Core.Exceptions;
 using Core.Interfaces;
 using Data.Data;
 using Data.Entities;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +31,9 @@ namespace Core.Services
         public async Task Archive(int id)
         {
             var product = await ctx.Educations.FindAsync(id);
-            if (product == null) return; // TODO: exception
+            if (product == null)
+                throw new HttpException("Product not found!", HttpStatusCode.NotFound);
+
 
             product.Archived = true;
             await ctx.SaveChangesAsync();
@@ -46,7 +50,8 @@ namespace Core.Services
         public async Task Delete(int id)
         {
             var product = await ctx.Educations.FindAsync(id);
-            if (product == null) return; // TODO: exception
+            if (product == null)
+                throw new HttpException("Product not found!", HttpStatusCode.NotFound);
 
             ctx.Educations.Remove(product);
             await ctx.SaveChangesAsync();
@@ -63,7 +68,9 @@ namespace Core.Services
         public async Task<EducationDto?> Get(int id)
         {
             var product = await ctx.Educations.FindAsync(id);
-            if (product == null) return null;
+            if (product == null)
+                throw new HttpException("Product not found!", HttpStatusCode.NotFound);
+
 
             // load related table data
             await ctx.Entry(product).Reference(x => x.Category).LoadAsync();
@@ -79,7 +86,8 @@ namespace Core.Services
         public async Task Restore(int id)
         {
             var product = await ctx.Educations.FindAsync(id);
-            if (product == null) return; // TODO: exception
+            if (product == null)
+                throw new HttpException("Product not found!", HttpStatusCode.NotFound);
 
             product.Archived = false;
             await ctx.SaveChangesAsync();

@@ -29,7 +29,14 @@ namespace itstep.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
+            //try
+            //{
             return Ok(await educationService.Get(id));
+            //}
+            //catch (Exception ex)
+            //{
+            //    return NotFound(new { ex.Message });
+            //}
         }
 
         [HttpPost]
