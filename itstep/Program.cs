@@ -2,6 +2,7 @@ using Core.Interfaces;
 using Core.MapperProfiles;
 using Core.Services;
 using Data.Data;
+using Data.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using itstep.Middlewares;
@@ -29,6 +30,7 @@ builder.Services.AddDbContext<ITStepDbContext>(options =>
 builder.Services.AddScoped<IEducationService, EducationService>();
 
 builder.Services.AddAutoMapper(typeof(AppProfile));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddExceptionHandler<HttpExceptionHandler>();
 builder.Services.AddProblemDetails();
