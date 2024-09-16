@@ -30,6 +30,9 @@ builder.Services.AddScoped<IEducationService, EducationService>();
 
 builder.Services.AddAutoMapper(typeof(AppProfile));
 
+builder.Services.AddExceptionHandler<HttpExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,7 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
