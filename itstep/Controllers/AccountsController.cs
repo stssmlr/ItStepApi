@@ -25,7 +25,7 @@ namespace itstep.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto model)
         {
-            /// Qwer1234 -> ierarg89agearg7ay4gae48g7s5etgf7aef83ag7f83
+            await accountsService.Login(model);
             return Ok();
         }
 
