@@ -1,4 +1,5 @@
-﻿using Core.Dtos;
+﻿using AutoMapper;
+using Core.Dtos;
 using Core.Exceptions;
 using Core.Interfaces;
 using Data.Entities;
@@ -12,25 +13,19 @@ using System.Threading.Tasks;
 
 namespace Core.Services
 {
-    public class AccountsService : IAccountsService
+    public class AccountsService(
+        UserManager<User> userManager,
+        IMapper mapper,
+        IJwtService jwtService) : IAccountsService
     {
-        private readonly UserManager<User> userManager;
-
-        public AccountsService(UserManager<User> userManager)
-        {
-            this.userManager = userManager;
-        }
+        private readonly UserManager<User> userManager = userManager;
+        private readonly IMapper mapper = mapper;
+        private readonly IJwtService jwtService = jwtService;
 
         public async Task Register(RegisterDto model)
         {
-            var user = new User()
-            {
-                Email = model.Email,
-                UserName = model.Email,
-                Birthdate = model.Birthdate,
-                PhoneNumber = model.PhoneNumber
-            };
-
+            
+            var user = mapper.Map<User>(model);
             var result = await userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
@@ -41,14 +36,17 @@ namespace Core.Services
             }
         }
 
-        public async Task Login(LoginDto model)
+        public async Task<LoginResponse> Login(LoginDto model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
                 throw new HttpException("Invalid login or password.", HttpStatusCode.BadRequest);
 
-            // generate access token... (JWT)
+            return new LoginResponse
+            {
+                Token = jwtService.CreateToken(jwtService.GetClaims(user))
+            };
         }
 
         public Task Logout()

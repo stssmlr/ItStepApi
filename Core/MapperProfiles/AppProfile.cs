@@ -16,6 +16,9 @@ namespace Core.MapperProfiles
             CreateMap<CreateEducationDto, Education>();
             CreateMap<EducationDto, Education>().ReverseMap();
             CreateMap<EditEducationDto, Education>();
+
+            CreateMap<RegisterDto, User>()
+                .ForMember(x => x.UserName, opt => opt.MapFrom(src => src.Email));
         }
     }
 }
